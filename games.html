@@ -386,31 +386,19 @@ document.getElementById('gameName')
 document.getElementById('runningGame')
 .textContent=game;
 function startGame(){
+  if(game === 'Select a game'){
+    alert('Choose a game first.');
+    return;
+  }
 
-    if(game==='Select a game'){
-        alert('Choose a game from Game/Chat Day and Night first.');
-        return;
-    }
+  if(game === 'Fortnite'){
+    window.location.href =
+      'com.epicgames.launcher://apps/Fortnite?action=launch&silent=true';
+    return;
+  }
 
-    document.getElementById('launcher')
-    .style.display='none';
-
-    document.getElementById('gameWindow')
-    .classList.add('active');
-
-    document.getElementById('launchMessage')
-    .textContent=
-    `Connecting to Night Sky server for ${game}...`;
-
-    const serverUrl='https://game-chat-day-and-night-1.onrender.com';
-
-    const gameUrl=
-    `${serverUrl}/game-session?game=${encodeURIComponent(game)}`;
-
-    setTimeout(()=>{
-        window.location.href=gameUrl;
-    },500);
-
+  alert(game + ' is selected, but its launcher is not connected yet.');
+}
   function closeGame(){
 
  document.getElementById('gameWindow')
