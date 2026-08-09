@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Night Sky Game Launcher</title>
+
+<style>
+
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ min-height:100vh;
+ color:white;
+ font-family:Arial,sans-serif;
+ overflow:hidden;
+
+ background:
+ radial-gradient(
+  ellipse at 20% 20%,
+  #00ffb833,
+  transparent 35%
+ ),
+ radial-gradient(
+  ellipse at 80% 30%,
+  #7b5cff55,
+  transparent 35%
+ ),
+ radial-gradient(
+  ellipse at 50% 90%,
+  #00eaff22,
+  transparent 35%
+ ),
+ linear-gradient(
+  180deg,
+  #01040c,
+  #031b2b,
+  #070518
+ );
+}
+
+/* Aurora */
+.aurora{
+ position:fixed;
+ inset:-30%;
+ pointer-events:none;
+
+ background:
+  linear-gradient(
+   110deg,
+   transparent 20%,
+   #00ffb822 35%,
+   #62ffcc44 45%,
+   #8b5cff44 55%,
+   transparent 70%
+  );
+
+ filter:blur(45px);
+
+ transform:rotate(-8deg);
+
+ animation:aurora 12s ease-in-out infinite alternate;
+}
+
+@keyframes aurora{
+ from{
+  transform:
+   translateX(-10%)
+   rotate(-8deg)
+   scale(1);
+ }
+ to{
+  transform:
+   translateX(10%)
+   rotate(8deg)
+   scale(1.15);
+ }
+}
+
+/* Stars */
+.stars{
+ position:fixed;
+ inset:0;
+ pointer-events:none;
+
+ background-image:
+  radial-gradient(circle,#ffffffaa 1px,transparent 1px),
+  radial-gradient(circle,#ffffff66 1px,transparent 1px);
+
+ background-size:90px 90px,150px 150px;
+
+ animation:stars 25s linear infinite;
+ opacity:.35;
+}
+
+@keyframes stars{
+ to{transform:translateY(-150px)}
+}
+
+.top{
+ position:relative;
+ z-index:2;
+
+ padding:18px 22px;
+
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+
+ background:#02050ccc;
+ backdrop-filter:blur(15px);
+
+ border-bottom:1px solid #ffffff20;
+}
+
+.logo{
+ font-size:22px;
+ font-weight:bold;
+}
+
+.container{
+ position:relative;
+ z-index:2;
+
+ height:calc(100vh - 75px);
+
+ display:flex;
+ flex-direction:column;
+
+ padding:25px;
+
+ max-width:1300px;
+ margin:auto;
+}
+
+.launcher{
+ flex:1;
+
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+
+ text-align:center;
+}
+
+.symbol{
+ width:110px;
+ height:110px;
+
+ display:flex;
+ align-items:center;
+ justify-content:center;
+
+ border-radius:50%;
+
+ font-size:48px;
+
+ background:
+  radial-gradient(circle,#8d7aff,#31205f);
+
+ border:2px solid #ffffff55;
+
+ box-shadow:
+ 0 0 35px #7c65ff99,
+ 0 0 100px #00ffd533;
+
+ animation:pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse{
+ 50%{
+  transform:scale(1.06);
+  box-shadow:
+   0 0 50px #7c65ffcc,
+   0 0 120px #00ffd555;
+ }
+}
+
+h1{
+ font-size:clamp(30px,6vw,60px);
+ margin:20px 0 5px;
+}
+
+#gameName{
+ color:#b9ffe9;
+}
+
+.status{
+ color:#b7bfd9;
+ margin-bottom:20px;
+}
+
+.controls{
+ display:flex;
+ flex-wrap:wrap;
+ justify-content:center;
+ gap:10px;
+}
+
+button{
+ border:1px solid #ffffff25;
+ border-radius:12px;
+
+ padding:13px 18px;
+
+ color:white;
+
+ background:#10152ddd;
+
+ cursor:pointer;
+
+ transition:.2s;
+}
+
+button:hover{
+ transform:translateY(-2px);
+
+ background:#604cff;
+
+ box-shadow:
+ 0 0 25px #604cff77;
+}
+
+.gameWindow{
+ display:none;
+
+ position:absolute;
+ inset:20px;
+
+ background:#020308ee;
+
+ border:1px solid #ffffff25;
+
+ border-radius:20px;
+
+ box-shadow:0 0 80px #000;
+
+ padding:20px;
+}
+
+.gameWindow.active{
+ display:flex;
+ flex-direction:column;
+}
+
+.gameScreen{
+ flex:1;
+
+ display:flex;
+ align-items:center;
+ justify-content:center;
+
+ text-align:center;
+
+ border-radius:15px;
+
+ background:
+ radial-gradient(
+  circle,
+  #5442a833,
+  transparent 50%
+ ),
+ #02040b;
+
+ border:1px solid #ffffff18;
+}
+
+.controller{
+ margin-top:15px;
+ color:#aeb8d4;
+}
+
+@media(max-width:650px){
+ .container{padding:12px}
+ .gameWindow{inset:10px}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="aurora"></div>
+<div class="stars"></div>
+
+<header class="top">
+
+ <strong>🌌 NIGHT SKY</strong>
+
+ <button onclick="goHome()">← Game/Chat</button>
+
+</header>
+
+<div class="container">
+
+ <div class="launcher" id="launcher">
+
+  <div class="symbol">🎮</div>
+
+  <h1>Night Sky</h1>
+
+  <h2 id="gameName">Select a game</h2>
+
+  <p class="status">
+   Your gaming launcher
+  </p>
+
+  <div class="controls">
+
+   <button onclick="startGame()">
+    ▶ Launch
+   </button>
+
+   <button onclick="detectController()">
+    🎮 Detect Controller
+   </button>
+
+   <button onclick="fullscreen()">
+    ⛶ Fullscreen
+   </button>
+
+   <button onclick="muteMusic()">
+    🔊 Music
+   </button>
+
+  </div>
+
+  <p id="controllerStatus" class="controller">
+   Controller status: checking...
+  </p>
+
+ </div>
+
+ <div class="gameWindow" id="gameWindow">
+
+  <div>
+   <h2 id="runningGame"></h2>
+
+   <button onclick="closeGame()">
+    ← Back
+   </button>
+  </div>
+
+  <br>
+
+  <div class="gameScreen">
+
+   <div>
+
+    <div style="font-size:55px">🎮</div>
+
+    <h2>Game Session</h2>
+
+    <p id="launchMessage">
+     Preparing authorized game session...
+    </p>
+
+    <button onclick="launchAuthorizedGame()">
+     Connect Game Service
+    </button>
+
+   </div>
+
+  </div>
+
+  <p class="controller">
+   Controller input can be detected by the browser.
+   Actual game streaming requires an authorized cloud-gaming integration.
+  </p>
+
+ </div>
+
+</div>
+
+<script>
+
+const game =
+ sessionStorage.getItem('selectedGame') ||
+ 'Select a game';
+
+document.getElementById('gameName')
+.textContent=game;
+
+document.getElementById('runningGame')
+.textContent=game;
+
+function startGame(){
+
+ if(game==='Select a game'){
+  alert('Choose a game from Game/Chat Day and Night first.');
+  return;
+ }
+
+ document.getElementById('launcher')
+ .style.display='none';
+
+ document.getElementById('gameWindow')
+ .classList.add('active');
+
+ document.getElementById('launchMessage')
+ .textContent=
+ `Ready to connect ${game} through an authorized gaming service.`;
+}
+
+function closeGame(){
+
+ document.getElementById('gameWindow')
+ .classList.remove('active');
+
+ document.getElementById('launcher')
+ .style.display='flex';
+}
+
+function goHome(){
+
+ window.location.href='index.html';
+}
+
+function detectController(){
+
+ if(navigator.getGamepads){
+
+  const pads=
+   [...navigator.getGamepads()]
+   .filter(Boolean);
+
+  document.getElementById('controllerStatus')
+   .textContent=
+   pads.length
+    ? `🎮 Controller detected: ${pads[0].id}`
+    : '🎮 No controller detected. Connect one and try again.';
+
+ }else{
+
+  document.getElementById('controllerStatus')
+   .textContent=
+   'Your browser does not support Gamepad API.';
+ }
+}
+
+window.addEventListener(
+ 'gamepadconnected',
+ e=>{
+  document.getElementById('controllerStatus')
+   .textContent=
+   `🎮 Controller connected: ${e.gamepad.id}`;
+ }
+);
+
+window.addEventListener(
+ 'gamepaddisconnected',
+ ()=>{
+  document.getElementById('controllerStatus')
+   .textContent=
+   '🎮 Controller disconnected.';
+ }
+);
+
+function fullscreen(){
+
+ document.documentElement
+ .requestFullscreen?.();
+}
+
+function muteMusic(){
+
+ alert(
+  'Connect your own licensed/original music file here.'
+ );
+}
+
+function launchAuthorizedGame(){
+
+ document.getElementById('launchMessage')
+ .textContent=
+ 'Your authorized cloud-gaming integration would launch the real game here.';
+}
+
+detectController();
+
+</script>
+
+</body>
+</html>
