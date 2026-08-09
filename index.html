@@ -1,0 +1,265 @@
+<main>
+
+<section id="home">
+ <div class="hero">
+  <h1>Game. Chat. Anytime.</h1>
+  <p>
+   Your gaming and social world in one place.
+  </p>
+
+  <button onclick="show('games')">🎮 Enter Games</button>
+  <button onclick="show('chat')">🌙 Open NightChat</button>
+ </div>
+
+ <div class="grid">
+  <div class="item">
+   <h2>🎮 Gaming</h2>
+   <p>Open the Night Sky game launcher.</p>
+  </div>
+
+  <div class="item">
+   <h2>🌙 NightChat</h2>
+   <p>Chat, watch, connect and call.</p>
+  </div>
+
+  <div class="item">
+   <h2>👥 Friends</h2>
+   <p>See your Game/Chat friends.</p>
+  </div>
+
+  <div class="item">
+   <h2>🚫 No Ads</h2>
+   <p>Your platform is designed without advertisements.</p>
+  </div>
+ </div>
+</section>
+
+<section id="games" class="panel hidden">
+ <h1>🎮 Game Center</h1>
+ <p>Select a game to open the Night Sky launcher.</p>
+
+ <div class="grid">
+
+  <div class="item">
+   <h2>Fortnite</h2>
+   <button onclick="openGame('Fortnite')">Play</button>
+  </div>
+
+  <div class="item">
+   <h2>Call of Duty</h2>
+   <button onclick="openGame('Call of Duty')">Play</button>
+  </div>
+
+  <div class="item">
+   <h2>Modern Warfare</h2>
+   <button onclick="openGame('Modern Warfare')">Play</button>
+  </div>
+
+  <div class="item">
+   <h2>Warzone</h2>
+   <button onclick="openGame('Warzone')">Play</button>
+  </div>
+
+  <div class="item">
+   <h2>Black Ops</h2>
+   <button onclick="openGame('Black Ops')">Play</button>
+  </div>
+
+  <div class="item">
+   <h2>Black Ops II</h2>
+   <button onclick="openGame('Black Ops II')">Play</button>
+  </div>
+
+  <div class="item">
+   <h2>Black Ops III</h2>
+   <button onclick="openGame('Black Ops III')">Play</button>
+  </div>
+
+  <div class="item">
+   <h2>Black Ops 4</h2>
+   <button onclick="openGame('Black Ops 4')">Play</button>
+  </div>
+
+  <div class="item">
+   <h2>Black Ops Cold War</h2>
+   <button onclick="openGame('Black Ops Cold War')">Play</button>
+  </div>
+
+  <div class="item">
+   <h2>Black Ops 6</h2>
+   <button onclick="openGame('Black Ops 6')">Play</button>
+  </div>
+
+  <div class="item">
+   <h2>Black Ops 7</h2>
+   <button onclick="openGame('Black Ops 7')">Play</button>
+  </div>
+
+  <div class="item">
+   <h2>Vanguard</h2>
+   <button onclick="openGame('Vanguard')">Play</button>
+  </div>
+
+  <div class="item">
+   <h2>Rainbow Six Siege</h2>
+   <button onclick="openGame('Rainbow Six Siege')">Play</button>
+  </div>
+
+ </div>
+</section>
+
+<section id="chat" class="panel hidden">
+ <h1>🌙 NightChat</h1>
+
+ <div class="feed">
+  <h2>NightChat Feed</h2>
+  <p>Watch videos and posts from people you follow.</p>
+
+  <button onclick="alert('Video feed will connect to your backend.')">
+   ▶ Watch
+  </button>
+ </div>
+
+ <br>
+
+ <div class="grid">
+
+  <div class="item">
+   <h2>💬 Messages</h2>
+   <input id="message" placeholder="Write a message...">
+   <button onclick="sendMessage()">Send</button>
+   <p id="messages"></p>
+  </div>
+
+  <div class="item">
+   <h2>📞 Calls</h2>
+   <p>Real calls require a WebRTC signaling/backend service.</p>
+   <button onclick="alert('Call service connection goes here.')">
+    Start Call
+   </button>
+  </div>
+
+ </div>
+
+ <br>
+
+ <div class="item plus">
+  <h2>⭐ NightChat Plus</h2>
+  <p id="plusStatus"></p>
+ </div>
+</section>
+
+<section id="friends" class="panel hidden">
+ <h1>👥 Friends</h1>
+
+ <div class="grid">
+  <div class="item">
+   <h3>Friend One</h3>
+   <p class="online">● Online</p>
+   <button onclick="alert('Chat opened')">Message</button>
+  </div>
+
+  <div class="item">
+   <h3>Friend Two</h3>
+   <p>Offline</p>
+   <button onclick="alert('Invite sent')">Invite</button>
+  </div>
+ </div>
+</section>
+
+</main>
+
+<footer>
+ Game/Chat Day and Night © 2026
+</footer>
+
+<script>
+
+function show(id){
+
+ document.querySelectorAll('main section')
+ .forEach(section=>section.classList.add('hidden'));
+
+ document.getElementById(id)
+ .classList.remove('hidden');
+
+ window.scrollTo(0,0);
+}
+
+function openGame(game){
+
+ sessionStorage.setItem('selectedGame',game);
+
+ window.location.href='games.html';
+}
+
+function sendMessage(){
+
+ const box=document.getElementById('message');
+ const output=document.getElementById('messages');
+
+ if(!box.value.trim())return;
+
+ output.innerHTML +=
+ `<div>👤 You: ${escapeHTML(box.value)}</div>`;
+
+ box.value='';
+}
+
+function escapeHTML(text){
+
+ return text.replace(/[&<>"']/g,
+ char=>({
+  '&':'&amp;',
+  '<':'&lt;',
+  '>':'&gt;',
+  '"':'&quot;',
+  "'":'&#039;'
+ })[char]);
+}
+
+function isHolidayWeek(){
+
+ const now=new Date();
+ const month=now.getMonth();
+ const day=now.getDate();
+
+ // Example holiday periods.
+ // Replace with your finalized holiday calendar.
+ const holidays=[
+  {month:11,start:20,end:31}, // Christmas season
+  {month:10,start:20,end:27}  // Thanksgiving season
+ ];
+
+ return holidays.some(h=>
+  h.month===month &&
+  day>=h.start &&
+  day<=h.end
+ );
+}
+
+function updatePlus(){
+
+ const day=new Date().getDay();
+
+ const freeDays=[0,1,3,5];
+
+ let status;
+
+ if(isHolidayWeek()){
+  status='🎉 NightChat Plus is FREE for the holiday week!';
+ }else if(freeDays.includes(day)){
+  status='⭐ NightChat Plus is FREE today!';
+ }else{
+  status='💳 NightChat Plus is a paid feature today.';
+ }
+
+ document.getElementById('plusStatus').textContent=status;
+}
+
+updatePlus();
+
+</script>
+
+</body>
+</html>
